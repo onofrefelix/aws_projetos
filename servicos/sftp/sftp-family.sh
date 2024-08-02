@@ -19,9 +19,14 @@ echo "$ROLE_INFO"  # Imprime a saída completa do comando
 # Criar o SFTP Transfer Family
 #FAMILY_ID=$(aws transfer create-server --endpoint-type VPC_ENDPOINT --identity-provider-type SERVICE_MANAGED --domain "$DOMAIN" --endpoint-details AddressAllocationIds=eipalloc-xxxxxxxxxxxxxxxxx --profile "$PROFILE" --region "$REGION" --query ServerId --output text)
 
-FAMILY_ID="family_your_id"
+FAMILY_ID=""
 # Criar o usuário SFTP
-aws transfer create-user --server-id "$FAMILY_ID" --user-name "$USERNAME" --role "$ROLE_ARN" --ssh-public-key "$SSH_PUBLIC_KEY" --profile "$PROFILE" --region "$REGION" --home-directory "$HOME_DIR" 
+if [-n "$FAMILY_ID"]; then
+	aws transfer create-user --server-id "$FAMILY_ID" \
+	       	--user-name "$USERNAME" --role "$ROLE_ARN" \
+		--ssh-public-key "$SSH_PUBLIC_KEY" --profile \
+		"$PROFILE" --region "$REGION" \
+		--home-directory "$HOME_DIR" 
 
 # Criar o servidor virtual SFTP (VSF)
 #VSF_ID=$(aws transfer create-access --server-id "$FAMILY_ID" --external-id "VSF-1" --home-directory "/sftp_root" --role "arn:aws:iam::xxxxxxxxxxxx:role/sua_funcao_iam_para_transfer" --profile "$PROFILE" --region "$REGION" --query AccessId --output text)
