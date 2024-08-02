@@ -1,7 +1,7 @@
 # aws_projetos
 # AWS SFTP User Creation Script
 
-This Bash script simplifies creating SFTP users on AWS Transfer Family.
+This Bash script simplifies creating SFTP users, policies and roles, for the AWS Transfer Family.
 
 ## Key Changes and Enhancements
 
