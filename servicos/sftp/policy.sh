@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-# Política base (em formato JSON) com placeholders para substituição
+# base Policy ( JSON format) with the placeholders to substituição
 POLICY_JSON='{
     "Version": "2012-10-17",
     "Statement": [
@@ -38,32 +38,32 @@ POLICY_JSON='{
 
 #########
 
-# Obtém o nome do bucket como argumento
+# get the bucket name as argument
 if [ $# -eq 0 ]; then
-  echo "Por favor, forneça o nome do bucket como argumento."
+  echo "Please, provide the bucket name as an argument."
   exit 1
 fi
-#nome do bucket
+#bucket name
 BUCKET_NAME="$1"
-#nome da politica
+#policy name
 POLICY_NAME="$2"
-# nome da Role
+# Role name
 ROLE_NAME="$3"
 
-# Substitui os placeholders pelo nome do bucket
+# change the placeholders buy the bucket name
 POLICY_JSON=$(echo "$POLICY_JSON" | sed "s/BUCKET_NAME/$BUCKET_NAME/g")
 
 # Perfil da AWS (opcional)
 PROFILE="$4"
 
-# Cria ou atualiza a política
+# Created or updated the policy. 
 aws iam create-policy --policy-name "$POLICY_NAME" --policy-document "$POLICY_JSON" ${PROFILE+--profile "$PROFILE"} || \
 aws iam update-policy --policy-arn "arn:aws:iam::$(aws sts get-caller-identity --query Account --output text):policy/$POLICY_NAME" --policy-document "$POLICY_JSON" ${PROFILE+--profile "$PROFILE"}
 
-echo "Política '$POLICY_NAME' criada/atualizada com sucesso para o bucket '$BUCKET_NAME'!"
+echo "Policy '$POLICY_NAME' successfully created and updated for bucket '$BUCKET_NAME'!"
 
 
 aws iam attach-role-policy --policy-arn "arn:aws:iam::$(aws sts get-caller-identity --query Account --output text):policy/$POLICY_NAME" --role-name "$ROLE_NAME" ${PROFILE+--profile "$PROFILE"}
 
-echo "Política '$POLICY_NAME' anexada à role '$ROLE_NAME' com sucesso!"
+echo "Policy '$POLICY_NAME' successfully attached to the role '$ROLE_NAME'"
 
